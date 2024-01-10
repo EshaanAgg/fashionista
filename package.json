@@ -1,0 +1,19 @@
+{
+  "name": "fashionista",
+  "version": "1.0.0",
+  "description": "Fashion made easy with the help of AI!",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "ts-node index.ts"
+  },
+  "author": "EshaanAgg",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^4.24.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2"
+  }
+}
