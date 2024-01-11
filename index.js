@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { z } from 'zod';
 import fs from 'fs';
 
 dotenv.config();
@@ -7,7 +8,53 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAN_API_KEY,
 });
 
-async function getFeaturesFromImage(imageUrl) {
+const ItemSchema = z.object({
+  name: z.string(),
+  color: z.array(z.string()),
+  features: z.array(z.string()),
+});
+
+const ResponseSchema = z.object({
+  clothes: z.array(ItemSchema),
+  accessories: z.array(ItemSchema),
+});
+
+const parseResponse = (content, url) => {
+  if (content.finish_reason !== 'stop')
+    return {
+      valid: false,
+      message: `The call to the API failed. The finish_reason was ${content.finish_reason}.`,
+    };
+
+  try {
+    const items = JSON.parse(content.message.content);
+    const validationResult = ResponseSchema.safeParse(items);
+
+    if (!validationResult.success)
+      return {
+        valid: false,
+        message: `The call to the API failed. The JSON that OpenAI generated did not adhere to the proper schema required. Content:\n${content.message.content}\nParsing Error:\n${validationResult.error.message}`,
+      };
+
+    // Add the image url to the items
+    const res = validationResult.data;
+    res.accessories.forEach((item) => (item.image = url));
+    res.clothes.forEach((item) => (item.image = url));
+
+    return {
+      valid: true,
+      data: res,
+    };
+  } catch (err) {
+    return {
+      valid: false,
+      message: `The call to the API failed. The response of the OpenAI could not be parsed as valid JSON. Content:\n${content.message.content}`,
+    };
+  }
+};
+
+// Example data that
+const getFeaturesFromImage = async (imageUrl) => {
   const response = await openai.chat.completions.create({
     model: 'gpt-4-vision-preview',
     messages: [
@@ -40,26 +87,10 @@ async function getFeaturesFromImage(imageUrl) {
     max_tokens: 350,
   });
 
-  const content = response.choices[0];
-  if (content.finish_reason === 'stop') {
-    // Get the items and add the image url to them
-    const items = JSON.parse(content.message.content);
-    items.clothes.forEach((item) => (item.image = imageUrl));
-    items.accessories.forEach((item) => (item.image = imageUrl));
+  return parseResponse(response.choices[0], imageUrl);
+};
 
-    return {
-      valid: true,
-      data: items,
-    };
-  }
-
-  return {
-    valid: false,
-    message: `The call to the API failed. The finish_reason was ${content.finish_reason}. The message was ${content.message.content}`,
-  };
-}
-
-async function getData(images) {
+const getData = async (images) => {
   const responses = await Promise.all(
     images.map((img) => getFeaturesFromImage(img))
   );
@@ -79,9 +110,7 @@ async function getData(images) {
             accessories: [],
             clothes: [],
           }
-        ),
-      null,
-      2
+        )
     )
   );
 
@@ -89,7 +118,7 @@ async function getData(images) {
   responses
     .filter((res) => !res.valid)
     .forEach((res) => console.log(res.message));
-}
+};
 
 getData([
   'https://assets.vogue.in/photos/5e5f7ab335619f0008e2decf/2:3/w_2560%2Cc_limit/Priyal_%2520Y%2520_Project%2520Fall%25202020.jpg',

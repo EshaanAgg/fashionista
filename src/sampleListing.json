@@ -3,24 +3,24 @@
     {
       "name": "sweater",
       "color": ["red", "blue", "green"],
-      "notes": "woolen texture"
+      "features": ["woolen texture"]
     },
     {
       "name": "shirt",
       "color": ["white"],
-      "notes": "cotton material, deep neck"
+      "features": ["cotton material", "deep neck"]
     }
   ],
   "accessories": [
     {
       "name": "watch",
       "color": ["black"],
-      "notes": "leather strap, classic look, small dial"
+      "features": ["leather strap", "classic look", "small dial"]
     },
     {
       "name": "shoes",
       "color": ["black"],
-      "notes": ""
+      "features": []
     }
   ]
 }
