@@ -5,15 +5,16 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon",
-    "start": "ts-node index.ts"
+    "start": "node index.js"
   },
+  "type": "module",
   "author": "EshaanAgg",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "openai": "^4.24.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2",
-    "ts-node": "^10.9.2"
+    "nodemon": "^3.0.2"
   }
 }

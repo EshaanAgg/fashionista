@@ -1,0 +1,26 @@
+{
+  "clothes": [
+    {
+      "name": "sweater",
+      "color": ["red", "blue", "green"],
+      "notes": "woolen texture"
+    },
+    {
+      "name": "shirt",
+      "color": ["white"],
+      "notes": "cotton material, deep neck"
+    }
+  ],
+  "accessories": [
+    {
+      "name": "watch",
+      "color": ["black"],
+      "notes": "leather strap, classic look, small dial"
+    },
+    {
+      "name": "shoes",
+      "color": ["black"],
+      "notes": ""
+    }
+  ]
+}

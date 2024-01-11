@@ -1,2 +1,5 @@
 .env
 node_modules
+
+# Large files and folders containing data
+data
