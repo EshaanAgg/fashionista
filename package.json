@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon",
+    "setup": "npm ci && cd web && npm ci",
     "start": "node index.js"
   },
   "type": "module",
