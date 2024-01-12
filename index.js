@@ -9,14 +9,14 @@ const openai = new OpenAI({
 });
 
 const ItemSchema = z.object({
-  name: z.string(),
-  color: z.array(z.string()),
-  features: z.array(z.string()),
+  name: z.string().default(''),
+  color: z.array(z.string()).default([]),
+  features: z.array(z.string()).default([]),
 });
 
 const ResponseSchema = z.object({
-  clothes: z.array(ItemSchema),
-  accessories: z.array(ItemSchema),
+  clothes: z.array(ItemSchema).default([]),
+  accessories: z.array(ItemSchema).default([]),
 });
 
 const parseResponse = (content, url) => {
@@ -24,6 +24,7 @@ const parseResponse = (content, url) => {
     return {
       valid: false,
       message: `The call to the API failed. The finish_reason was ${content.finish_reason}.`,
+      url,
     };
 
   try {
@@ -34,6 +35,7 @@ const parseResponse = (content, url) => {
       return {
         valid: false,
         message: `The call to the API failed. The JSON that OpenAI generated did not adhere to the proper schema required. Content:\n${content.message.content}\nParsing Error:\n${validationResult.error.message}`,
+        url,
       };
 
     // Add the image url to the items
@@ -49,45 +51,54 @@ const parseResponse = (content, url) => {
     return {
       valid: false,
       message: `The call to the API failed. The response of the OpenAI could not be parsed as valid JSON. Content:\n${content.message.content}`,
+      url,
     };
   }
 };
 
 // Example data that
 const getFeaturesFromImage = async (imageUrl) => {
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4-vision-preview',
-    messages: [
-      {
-        role: 'system',
-        content:
-          'You are a fashion expert. You need to identify the clothes, apparels and all the fashion accessories in the provided images. Reply only with the valid JSON and nothing else.',
-      },
-      {
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: `What clothes and accessories are in this image? Reply only with valid JSON without the pretty formatting. The format that you should reply in is as follows:
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4-vision-preview',
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a fashion expert. You need to identify the clothes, apparels and all the fashion accessories in the provided images. Reply only with the valid JSON and nothing else.',
+        },
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: `What clothes and accessories are in this image? Reply only with valid JSON without the pretty formatting. The format that you should reply in is as follows:
             """
             ${fs.readFileSync('./src/sampleListing.json', 'utf-8')}
             """
             `,
-          },
-          {
-            type: 'image_url',
-            image_url: {
-              url: imageUrl,
-              detail: 'low',
             },
-          },
-        ],
-      },
-    ],
-    max_tokens: 350,
-  });
+            {
+              type: 'image_url',
+              image_url: {
+                url: imageUrl,
+                detail: 'low',
+              },
+            },
+          ],
+        },
+      ],
+      max_tokens: 350,
+    });
 
-  return parseResponse(response.choices[0], imageUrl);
+    return parseResponse(response.choices[0], imageUrl);
+  } catch (err) {
+    return {
+      valid: false,
+      message: `The call to the API failed. The error was ${err.message}`,
+      url: imageUrl,
+    };
+  }
 };
 
 const getData = async (images) => {
@@ -95,33 +106,58 @@ const getData = async (images) => {
     images.map((img) => getFeaturesFromImage(img))
   );
 
-  // Write the data to a file
-  fs.writeFileSync(
-    './data/extractedData.json',
-    JSON.stringify(
-      responses
-        .filter((res) => res.valid)
-        .reduce(
-          (acc, res) => ({
-            accessories: [...acc.accessories, ...res.data.accessories],
-            clothes: [...acc.clothes, ...res.data.clothes],
-          }),
-          {
-            accessories: [],
-            clothes: [],
-          }
-        )
-    )
-  );
-
   // Log the information about all the failed requests
   responses
     .filter((res) => !res.valid)
     .forEach((res) => console.log(res.message));
+
+  // Append these urls to a logging file
+  fs.appendFileSync(
+    './data/failedURLs.txt',
+    responses
+      .filter((res) => !res.valid)
+      .map((res) => res.url)
+      .join('\n')
+  );
+
+  return responses
+    .filter((res) => res.valid)
+    .reduce(
+      (acc, res) => ({
+        accessories: [...acc.accessories, ...res.data.accessories],
+        clothes: [...acc.clothes, ...res.data.clothes],
+      }),
+      {
+        accessories: [],
+        clothes: [],
+      }
+    );
 };
 
-getData([
-  'https://assets.vogue.in/photos/5e5f7ab335619f0008e2decf/2:3/w_2560%2Cc_limit/Priyal_%2520Y%2520_Project%2520Fall%25202020.jpg',
-  'https://www.shutterstock.com/image-photo/fashion-woman-yellow-silk-dress-600nw-2364067289.jpg',
-  'https://assets.vogue.com/photos/6345c499b233071b4e23de2f/master/w_320%2Cc_limit/00023-moschino-spring-2023-ready.jpeg',
-]);
+const getDataBatched = async (images) => {
+  const batchSize = 10;
+  const batches = [];
+  for (let i = 0; i < images.length; i += batchSize)
+    batches.push(images.slice(i, i + batchSize));
+
+  let data = {
+    accessories: [],
+    clothes: [],
+  };
+
+  for (let i = 0; i < batches.length; i++) {
+    const res = await getData(batches[i]);
+    console.log(`Completed batch ${i + 1}`);
+
+    data.accessories.push(...res.accessories);
+    data.clothes.push(...res.clothes);
+  }
+
+  fs.writeFileSync('./data/extractedData.json', JSON.stringify(data));
+};
+
+getDataBatched(
+  JSON.parse(fs.readFileSync('./data/coyo.json', 'utf-8')).map(
+    (item) => item.url
+  )
+);
