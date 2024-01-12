@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # Applications specific files
-src/data/imageData.json
+src/data/imageItems.json

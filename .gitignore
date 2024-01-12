@@ -2,4 +2,6 @@
 node_modules
 
 # Large files and folders containing data
-data
+data/coyo.json
+data/extractedData.json
+data/failedURLs.txt
