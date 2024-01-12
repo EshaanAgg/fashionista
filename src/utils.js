@@ -7,26 +7,30 @@ export const convertToImageData = () => {
   const imageItems = {};
 
   for (const item of accessories) {
-    if (!imageItems[item.image]) {
-      imageItems[item.image] = {
-        url: item.image,
+    const key = item.image;
+    delete item.image;
+    if (!imageItems[key]) {
+      imageItems[key] = {
+        url: key,
         accessories: [item],
         clothes: [],
       };
     } else {
-      imageItems[item.image].accessories.push(item);
+      imageItems[key].accessories.push(item);
     }
   }
 
   for (const item of clothes) {
-    if (!imageItems[item.image]) {
-      imageItems[item.image] = {
-        url: item.image,
+    const key = item.image;
+    delete item.image;
+    if (!imageItems[key]) {
+      imageItems[key] = {
+        url: key,
         accessories: [],
         clothes: [item],
       };
     } else {
-      imageItems[item.image].clothes.push(item);
+      imageItems[key].clothes.push(item);
     }
   }
 
