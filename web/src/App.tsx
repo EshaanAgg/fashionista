@@ -1,7 +1,7 @@
-import './App.css';
+import { ImageData } from './components/ImageData';
 
 function App() {
-  return <>Hello World</>;
+  return <ImageData />;
 }
 
 export default App;

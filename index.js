@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import { z } from 'zod';
 import fs from 'fs';
+import { convertToImageData } from './src/utils.js';
 
 dotenv.config();
 const openai = new OpenAI({
@@ -101,6 +102,7 @@ const getFeaturesFromImage = async (imageUrl) => {
   }
 };
 
+// Makes the API call for a bunch of images and returns the data
 const getData = async (images) => {
   const responses = await Promise.all(
     images.map((img) => getFeaturesFromImage(img))
@@ -154,6 +156,7 @@ const getDataBatched = async (images) => {
   }
 
   fs.writeFileSync('./data/extractedData.json', JSON.stringify(data));
+  convertToImageData();
 };
 
 getDataBatched(

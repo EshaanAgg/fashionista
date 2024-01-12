@@ -10,10 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/carousel": "^7.4.1",
     "@mantine/core": "^7.4.1",
     "@mantine/hooks": "^7.4.1",
-    "embla-carousel-react": "^7.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
