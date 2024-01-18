@@ -13,7 +13,9 @@
     "@mantine/core": "^7.4.1",
     "@mantine/hooks": "^7.4.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "reactflow": "^11.10.2",
+    "string-similarity-js": "^2.1.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.47",
@@ -28,6 +30,7 @@
     "postcss": "^8.4.33",
     "postcss-preset-mantine": "^1.12.3",
     "postcss-simple-vars": "^7.0.1",
+    "react-router-dom": "^6.21.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.11"

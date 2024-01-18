@@ -13,9 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
-    "ml-hclust": "^3.1.0",
     "openai": "^4.24.2",
-    "string-similarity-js": "^2.1.4",
     "zod": "^3.22.4"
   }
 }
