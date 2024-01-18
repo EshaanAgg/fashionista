@@ -20,4 +20,5 @@ type GraphOptions = {
   weightFeatures: number;
   seperationWidth: number;
   seperationHeight: number;
+  maxImagesInRow: number;
 };

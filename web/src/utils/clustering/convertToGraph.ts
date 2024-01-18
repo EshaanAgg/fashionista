@@ -8,28 +8,28 @@ const defaultOptions: GraphOptions = {
   weightFeatures: 0.2,
   seperationWidth: 10,
   seperationHeight: 10,
+  maxImagesInRow: 8,
 };
 
 const getNodes = (items: ImageItem[], options: GraphOptions) => {
-  const rows = Math.ceil(Math.sqrt(items.length));
-  const columns = Math.ceil(items.length / rows);
+  const rows = Math.ceil(items.length / options.maxImagesInRow);
 
   const arrangedList = [];
 
   for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < columns; j++) {
-      const index = i * columns + j;
+    for (let j = 0; j < options.maxImagesInRow; j++) {
+      const index = i * options.maxImagesInRow + j;
       if (index < items.length) {
         arrangedList.push({
-          id: index,
+          id: index.toString(),
           position: {
             x: j * options.seperationWidth,
             y: i * options.seperationHeight,
           },
           data: {
-            label: `Image ${index + 1}`,
+            ...items[index],
           },
-          ...items[index],
+          type: 'imageNode',
         });
       }
     }
@@ -47,9 +47,12 @@ const getEdges = (items: ImageItem[], options: GraphOptions) => {
       if (distance.clothes.length || distance.accessories.length)
         edges.push({
           id: `${i}-${j}`,
-          source: i,
-          target: j,
-          ...distance,
+          source: i.toString(),
+          target: j.toString(),
+          data: {
+            ...distance,
+          },
+          type: 'imageEdge',
         });
     }
   }
