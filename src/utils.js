@@ -1,9 +1,7 @@
 import fs from 'fs';
 
-export const convertToImageData = () => {
-  const { accessories, clothes } = JSON.parse(
-    fs.readFileSync('./data/extractedData.json', 'utf-8')
-  );
+export const convertToImageData = (from) => {
+  const { accessories, clothes } = JSON.parse(fs.readFileSync(from, 'utf-8'));
   const imageItems = {};
 
   for (const item of accessories) {
