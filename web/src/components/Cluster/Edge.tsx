@@ -10,7 +10,7 @@ export function ImageEdge(
   props: EdgeProps<{
     clothes: string[];
     accessories: string[];
-  }>
+  }>,
 ) {
   const [, labelX, labelY] = getBezierPath({
     sourceX: props.sourceX,

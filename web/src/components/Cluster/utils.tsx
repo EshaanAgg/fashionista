@@ -13,10 +13,10 @@ export const highlightNodes = (
   node: Node,
   nodes: Node[],
   edges: Edge[],
-  setNodes: React.Dispatch<React.SetStateAction<Node<ImageItem>[]>>
+  setNodes: React.Dispatch<React.SetStateAction<Node<ImageItem>[]>>,
 ) => {
   const nodeIdsToHighlight = getNodesToHighlight(node, nodes, edges).map(
-    (node) => node.id
+    (node) => node.id,
   );
 
   setNodes((nodes) => {
@@ -41,10 +41,10 @@ const getConnectedEdges = (nodeId: string, edges: Edge[]) => {
 export const highlightEdges = (
   node: Node,
   edges: Edge[],
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>
+  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
 ) => {
   const edgeIdsToHighlight = getConnectedEdges(node.id, edges).map(
-    (edge) => edge.id
+    (edge) => edge.id,
   );
 
   setEdges((edges) => {
@@ -63,7 +63,7 @@ export const highlightEdges = (
 };
 
 export const resetNodeStyles = (
-  setNodes: React.Dispatch<React.SetStateAction<Node<ImageItem>[]>>
+  setNodes: React.Dispatch<React.SetStateAction<Node<ImageItem>[]>>,
 ) => {
   setNodes((nodes) => {
     return nodes.map((elem) => {
@@ -78,7 +78,7 @@ export const resetNodeStyles = (
 };
 
 export const resetEdgeStyles = (
-  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>
+  setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
 ) => {
   setEdges((edges) => {
     return edges.map((elem) => {

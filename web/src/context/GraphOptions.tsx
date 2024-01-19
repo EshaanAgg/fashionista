@@ -7,7 +7,9 @@ type GraphContextType = {
 
 const GraphOptionsContext = createContext<GraphContextType | null>(null);
 
-export const GraphOptionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const GraphOptionsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [graphOptions, setGraphOptions] = useState<GraphOptions>({
     clothesCutoff: 1,
     accessoriesCutoff: 1,
@@ -21,20 +23,25 @@ export const GraphOptionsProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const updateOption = (key: GraphOptionsKey, value: number) => {
     setGraphOptions({
-      ...graphOptions, 
-      [key]: value
-    })
-  }
+      ...graphOptions,
+      [key]: value,
+    });
+  };
 
-   return (
-    <GraphOptionsContext.Provider value={{ options: graphOptions, updateOption }}>
+  return (
+    <GraphOptionsContext.Provider
+      value={{ options: graphOptions, updateOption }}
+    >
       {children}
     </GraphOptionsContext.Provider>
   );
-}
+};
 
 export const useGraphOptionsContext = () => {
   const data = useContext(GraphOptionsContext);
-  if (data === null) throw new Error("The useGraphOptionsContext must be called inside a GraphOptionsProvider.")
+  if (data === null)
+    throw new Error(
+      'The useGraphOptionsContext must be called inside a GraphOptionsProvider.',
+    );
   return data;
-}
+};

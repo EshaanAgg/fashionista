@@ -62,7 +62,7 @@ const getEdges = (items: ImageItem[], options: GraphOptions) => {
 
 export const convertToGraph = (
   images: ImageItem[],
-  options: Partial<GraphOptions>
+  options: Partial<GraphOptions>,
 ) => {
   const opts = { ...defaultOptions, ...options };
   return {

@@ -23,4 +23,4 @@ type GraphOptions = {
   maxImagesInRow: number;
 };
 
-type GraphOptionsKey = keyof GraphOptions
+type GraphOptionsKey = keyof GraphOptions;

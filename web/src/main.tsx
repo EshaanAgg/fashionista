@@ -9,7 +9,11 @@ import { GraphOptionsProvider } from './context/GraphOptions';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (<GraphOptionsProvider><Cluster /></GraphOptionsProvider>),
+    element: (
+      <GraphOptionsProvider>
+        <Cluster />
+      </GraphOptionsProvider>
+    ),
   },
   {
     path: '/images',
@@ -25,5 +29,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <MantineProvider>
       <RouterProvider router={router} />;
     </MantineProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

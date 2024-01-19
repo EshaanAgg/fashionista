@@ -31,7 +31,7 @@ export function Cluster() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialGraph.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialGraph.edges);
 
-  const [_selectedNode, setSelectedNode] = useState<Node<ImageItem> | null>();
+  const [, setSelectedNode] = useState<Node<ImageItem> | null>();
 
   return (
     <div

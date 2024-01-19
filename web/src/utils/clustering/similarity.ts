@@ -5,7 +5,7 @@ function arraySimilarityHelper(arr1: string[], arr2: string[]) {
   return (
     arr1
       .map((ele) =>
-        arr2.reduce((acc, val) => Math.max(acc, stringSimilarity(ele, val)), 0)
+        arr2.reduce((acc, val) => Math.max(acc, stringSimilarity(ele, val)), 0),
       )
       .reduce((acc, val) => acc + val, 0) / arr1.length
   );
@@ -24,7 +24,7 @@ function itemSimilarity(
   item2: DataItem,
   weightName: number,
   weightColor: number,
-  weightFeatures: number
+  weightFeatures: number,
 ) {
   const nameSimilarity = stringSimilarity(item1.name, item2.name);
   const colorSimilarity = arraySimilarity(item1.color, item2.color);
@@ -45,7 +45,7 @@ const getSimilarItems = (
   weightName: number,
   weightColor: number,
   weightFeatures: number,
-  cutoff: number
+  cutoff: number,
 ) => {
   const arr1 = item1[key];
   const arr2 = item2[key];
@@ -59,7 +59,7 @@ const getSimilarItems = (
           arr2[j],
           weightName,
           weightColor,
-          weightFeatures
+          weightFeatures,
         ) >= cutoff
       )
         res.push(arr1[i].name);
@@ -73,7 +73,7 @@ const getSimilarItems = (
 export const getSimilar = (
   item1: ImageItem,
   item2: ImageItem,
-  options: GraphOptions
+  options: GraphOptions,
 ) => {
   return {
     clothes: getSimilarItems(
@@ -83,7 +83,7 @@ export const getSimilar = (
       options.weightName,
       options.weightColor,
       options.weightFeatures,
-      options.clothesCutoff
+      options.clothesCutoff,
     ),
     accessories: getSimilarItems(
       item1,
@@ -92,7 +92,7 @@ export const getSimilar = (
       options.weightName,
       options.weightColor,
       options.weightFeatures,
-      options.accessoriesCutoff
+      options.accessoriesCutoff,
     ),
   };
 };

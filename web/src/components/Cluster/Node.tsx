@@ -4,7 +4,7 @@ import { Handle, NodeProps, Position, useReactFlow } from 'reactflow';
 export function ImageNode({ data, selected, id }: NodeProps<ImageItem>) {
   const { getEdges } = useReactFlow();
   const hasEdge = getEdges().some(
-    (edge) => edge.source === id || edge.target === id
+    (edge) => edge.source === id || edge.target === id,
   );
 
   return (
