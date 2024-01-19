@@ -30,6 +30,7 @@ export function ImageEdge(
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             pointerEvents: 'all',
+            opacity: props.style?.opacity,
           }}
         >
           {props.data?.clothes.join(', ')}
