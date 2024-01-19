@@ -32,22 +32,20 @@ export const highlightNodes = (
   });
 };
 
-export const getConnectedEdges = (nodesId: string[], edges: Edge[]) => {
+const getConnectedEdges = (nodeId: string, edges: Edge[]) => {
   return edges.filter((edge) => {
-    return nodesId.includes(edge.source) && nodesId.includes(edge.target);
+    return nodeId === edge.source || nodeId === edge.target;
   });
 };
 
 export const highlightEdges = (
   node: Node,
-  nodes: Node[],
   edges: Edge[],
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>
 ) => {
-  const edgeIdsToHighlight = getConnectedEdges(
-    getNodesToHighlight(node, nodes, edges).map((node) => node.id),
-    edges
-  ).map((edge) => edge.id);
+  const edgeIdsToHighlight = getConnectedEdges(node.id, edges).map(
+    (edge) => edge.id
+  );
 
   setEdges((edges) => {
     return edges.map((elem) => {

@@ -1,4 +1,4 @@
-import { Card, Image, Table, Badge, Text } from '@mantine/core';
+import { Table, Badge } from '@mantine/core';
 
 const ContentTable = ({
   rows,
@@ -51,40 +51,11 @@ const ContentTable = ({
   );
 };
 
-export const ImageSlide = ({
-  imageData,
-  serialNumber,
-}: {
-  imageData: ImageItem;
-  serialNumber: number;
-}) => {
+export const ImageTable = ({ imageData }: { imageData: ImageItem }) => {
   return (
     <>
-      <Card
-        shadow="sm"
-        padding="lg"
-        radius="md"
-        withBorder
-        className="max-w-2xl mx-auto"
-      >
-        <Card.Section p="md">
-          <Text size="lg" className="mx-auto">
-            Image {serialNumber}
-          </Text>
-          <Image
-            src={imageData.url}
-            radius="md"
-            h={250}
-            w="auto"
-            fit="contain"
-            className="mx-auto"
-            alt="Failed to load the image"
-          />
-        </Card.Section>
-
-        <ContentTable rows={imageData.clothes} heading="Clothes" />
-        <ContentTable rows={imageData.accessories} heading="Accessories" />
-      </Card>
+      <ContentTable rows={imageData.clothes} heading="Clothes" />
+      <ContentTable rows={imageData.accessories} heading="Accessories" />
     </>
   );
 };

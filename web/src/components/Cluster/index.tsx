@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -22,12 +22,11 @@ import imageData from '../../data/imageItems.json';
 
 import 'reactflow/dist/style.css';
 
+const nodeTypes = { imageNode: ImageNode };
+const edgeTypes = { imageEdge: ImageEdge };
 
 export function Cluster() {
-  const nodeTypes = useMemo(() => ({ imageNode: ImageNode }), []);
-  const edgeTypes = useMemo(() => ({ imageEdge: ImageEdge }), []);
-
-  const { options: graphOptions } = useGraphOptionsContext()
+  const { options: graphOptions } = useGraphOptionsContext();
   const initialGraph = convertToGraph(imageData, graphOptions);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialGraph.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialGraph.edges);
@@ -35,7 +34,15 @@ export function Cluster() {
   const [_selectedNode, setSelectedNode] = useState<Node<ImageItem> | null>();
 
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -50,7 +57,7 @@ export function Cluster() {
           const node = selectedElements.nodes[0];
           setSelectedNode(node);
           highlightNodes(node, nodes, edges, setNodes);
-          highlightEdges(node, nodes, edges, setEdges);
+          highlightEdges(node, edges, setEdges);
         }}
         onPaneClick={() => {
           resetNodeStyles(setNodes);
@@ -58,11 +65,19 @@ export function Cluster() {
           setSelectedNode(null);
         }}
       >
-          <Controls />
+        <Controls
+          style={{
+            zIndex: 2,
+          }}
+        />
+        <MiniMap
+          style={{
+            zIndex: 2,
+          }}
+        />
         <ClusterPanel />
-        <MiniMap />
         <Background gap={12} size={1} />
       </ReactFlow>
-      </div>
+    </div>
   );
 }
