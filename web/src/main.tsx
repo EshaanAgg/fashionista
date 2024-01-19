@@ -4,11 +4,12 @@ import { MantineProvider } from '@mantine/core';
 import { ImageData } from './components/ImageData';
 import { Cluster } from './components/Cluster';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { GraphOptionsProvider } from './context/GraphOptions';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Cluster />,
+    element: (<GraphOptionsProvider><Cluster /></GraphOptionsProvider>),
   },
   {
     path: '/images',

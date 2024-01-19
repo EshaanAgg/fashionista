@@ -15,21 +15,20 @@ import {
   highlightEdges,
   resetEdgeStyles,
 } from './utils';
+import { ClusterPanel } from './ClusterPanel';
 import { convertToGraph } from '../../utils/clustering/convertToGraph';
+import { useGraphOptionsContext } from '../../context/GraphOptions';
 import imageData from '../../data/imageItems.json';
 
 import 'reactflow/dist/style.css';
 
-const initialGraph = convertToGraph(imageData, {
-  seperationWidth: 250,
-  seperationHeight: 180,
-  maxImagesInRow: 6,
-});
 
 export function Cluster() {
   const nodeTypes = useMemo(() => ({ imageNode: ImageNode }), []);
   const edgeTypes = useMemo(() => ({ imageEdge: ImageEdge }), []);
 
+  const { options: graphOptions } = useGraphOptionsContext()
+  const initialGraph = convertToGraph(imageData, graphOptions);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialGraph.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialGraph.edges);
 
@@ -59,10 +58,11 @@ export function Cluster() {
           setSelectedNode(null);
         }}
       >
-        <Controls />
+          <Controls />
+        <ClusterPanel />
         <MiniMap />
         <Background gap={12} size={1} />
       </ReactFlow>
-    </div>
+      </div>
   );
 }

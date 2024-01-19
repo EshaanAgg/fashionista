@@ -22,3 +22,5 @@ type GraphOptions = {
   seperationHeight: number;
   maxImagesInRow: number;
 };
+
+type GraphOptionsKey = keyof GraphOptions
