@@ -1,0 +1,20 @@
+[
+  {
+    "name": "sneakers",
+    "color": ["white", "black"],
+    "features": [],
+    "image": "1"
+  },
+  {
+    "name": "sunglasses",
+    "color": ["blue"],
+    "features": ["round frames"],
+    "image": "2"
+  },
+  {
+    "name": "sneakers",
+    "color": ["black"],
+    "features": [],
+    "image": "3"
+  }
+]
