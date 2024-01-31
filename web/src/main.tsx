@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MantineProvider } from '@mantine/core';
+import { ReactFlowProvider } from 'reactflow';
 
 import { ImageData } from './components/ImageData';
 import { Cluster } from './components/Cluster';
@@ -35,9 +36,11 @@ import '@mantine/core/styles.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MantineProvider>
-      <GraphOptionsProvider>
-        <RouterProvider router={router} />
-      </GraphOptionsProvider>
+      <ReactFlowProvider>
+        <GraphOptionsProvider>
+          <RouterProvider router={router} />
+        </GraphOptionsProvider>
+      </ReactFlowProvider>
     </MantineProvider>
   </React.StrictMode>,
 );

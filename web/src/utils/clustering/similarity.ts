@@ -150,14 +150,19 @@ const groupItems = (
   dataType: 'clothes' | 'accessories',
 ) => {
   const clusters: DataItemWithImage[][] = [];
-  const visited = new Set<DataItemWithImage>();
+  const available = new Set(items);
 
   for (const item of items) {
-    if (visited.has(item)) continue;
+    if (!available.has(item)) continue;
 
-    const cluster = findSimilarItems(item, items, options, dataType);
+    const cluster = findSimilarItems(
+      item,
+      Array.from(available),
+      options,
+      dataType,
+    );
     clusters.push(cluster);
-    for (const ele of cluster) visited.add(ele);
+    for (const ele of cluster) available.delete(ele);
   }
 
   return clusters;

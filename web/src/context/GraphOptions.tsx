@@ -11,8 +11,8 @@ export const GraphOptionsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [graphOptions, setGraphOptions] = useState<GraphOptions>({
-    clothesCutoff: 1,
-    accessoriesCutoff: 1,
+    clothesCutoff: 0.8,
+    accessoriesCutoff: 0.8,
     weightName: 0.5,
     weightColor: 0.3,
     weightFeatures: 0.2,

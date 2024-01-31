@@ -46,7 +46,7 @@ export function ClusterPanel() {
                   setEdges(newGraph.edges);
                 }}
                 min={0}
-                max={1.5}
+                max={1}
                 step={0.005}
               />
             </div>
