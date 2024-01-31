@@ -25,6 +25,7 @@ import { clusterWithGPT } from './src/cluster/clusterWithGPT.js';
 
 clusterWithGPT('./data/sampleData.json').then((data) => {
   if (!data.valid) {
+    console.error(data.place);
     console.log(data.message);
     return;
   }

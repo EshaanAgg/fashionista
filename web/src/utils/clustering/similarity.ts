@@ -31,9 +31,10 @@ function itemSimilarity(
   const featuresSimilarity = arraySimilarity(item1.features, item2.features);
 
   return (
-    weightName * nameSimilarity +
-    weightFeatures * featuresSimilarity +
-    weightColor * colorSimilarity
+    (weightName * nameSimilarity +
+      weightFeatures * featuresSimilarity +
+      weightColor * colorSimilarity) /
+    (weightName + weightFeatures + weightColor)
   );
 }
 
@@ -94,5 +95,91 @@ export const getSimilar = (
       options.weightFeatures,
       options.accessoriesCutoff,
     ),
+  };
+};
+
+// Returns the intersection over union of two arrays
+const getIntersectionOverUnion = (arr1: string[], arr2: string[]) => {
+  const intersection = arr1.filter((x) => arr2.includes(x));
+  const union = [...new Set([...arr1, ...arr2])];
+  return intersection.length / union.length;
+};
+
+// Given an item and a list of other items, returns a list of items that are similar to the given item
+const findSimilarItems = (
+  object: DataItemWithImage,
+  otherItems: DataItemWithImage[],
+  options: GraphOptions,
+  dataType: 'clothes' | 'accessories',
+) => {
+  return otherItems
+    .map((item) => {
+      const nameSimilarity = stringSimilarity(object.name, item.name);
+      const colorSimilarity = getIntersectionOverUnion(
+        object.color,
+        item.color,
+      );
+      const featuresSimilarity = getIntersectionOverUnion(
+        object.features,
+        item.features,
+      );
+
+      return {
+        item,
+        similarity:
+          (options.weightName * nameSimilarity +
+            options.weightColor * colorSimilarity +
+            options.weightFeatures * featuresSimilarity) /
+          (options.weightName + options.weightColor + options.weightFeatures),
+      };
+    })
+    .filter((item) => {
+      const threshold =
+        dataType === 'clothes'
+          ? options.clothesCutoff
+          : options.accessoriesCutoff;
+      return item.similarity >= threshold;
+    })
+    .map((item) => item.item);
+};
+
+// Given a list of items, returns a list of clusters of similar items
+const groupItems = (
+  items: DataItemWithImage[],
+  options: GraphOptions,
+  dataType: 'clothes' | 'accessories',
+) => {
+  const clusters: DataItemWithImage[][] = [];
+  const visited = new Set<DataItemWithImage>();
+
+  for (const item of items) {
+    if (visited.has(item)) continue;
+
+    const cluster = findSimilarItems(item, items, options, dataType);
+    clusters.push(cluster);
+    for (const ele of cluster) visited.add(ele);
+  }
+
+  return clusters;
+};
+
+// Given the ImageItems, returns a list of clusters of similar items for clothes and accessories
+export const getClustersFromImageItems = (
+  items: ImageItem[],
+  options: GraphOptions,
+) => {
+  const allClothes = [],
+    allAccessories = [];
+
+  for (const item of items) {
+    allClothes.push(...item.clothes.map((ele) => ({ ...ele, url: item.url })));
+    allAccessories.push(
+      ...item.accessories.map((ele) => ({ ...ele, url: item.url })),
+    );
+  }
+
+  return {
+    clothes: groupItems(allClothes, options, 'clothes'),
+    accessories: groupItems(allAccessories, options, 'accessories'),
   };
 };

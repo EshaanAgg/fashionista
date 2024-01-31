@@ -6,6 +6,10 @@ type DataItem = {
   features: string[];
 };
 
+type DataItemWithImage = DataItem & {
+  url: string;
+};
+
 type ImageItem = {
   url: string;
   accessories: DataItem[];

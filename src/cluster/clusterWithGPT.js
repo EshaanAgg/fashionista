@@ -52,7 +52,8 @@ const parseResponse = (content, imageIdsToNames) => {
 const makeRequest = async (data) => {
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-4-0125-preview',
+      model: 'gpt-4-1106-preview',
+      response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
@@ -87,9 +88,13 @@ const makeRequest = async (data) => {
           ],
         },
       ],
+      max_tokens: 4096,
     });
 
-    return response.choices[0];
+    return {
+      valid: true,
+      data: response.choices[0],
+    };
   } catch (err) {
     return {
       valid: false,
@@ -124,15 +129,32 @@ export const clusterWithGPT = async (path) => {
     imageIdsToNames[imageNamesToIDs[key]] = key;
   });
 
-  const resClothes = await makeRequest(data.accessories);
-  if (!resClothes.valid) return resClothes;
-  const resAccessories = await makeRequest(data.clothes);
-  if (!resAccessories.valid) return resAccessories;
+  const resClothes = await makeRequest(data.clothes);
+  if (!resClothes.valid)
+    return {
+      ...resClothes,
+      place: "makeRequest for 'clothes'",
+    };
 
-  const parsedClothes = parseResponse(resClothes, imageIdsToNames);
-  if (!parsedClothes.valid) return parsedClothes;
-  const parsedAccessories = parseResponse(resAccessories, imageIdsToNames);
-  if (!parsedAccessories.valid) return parsedAccessories;
+  const resAccessories = await makeRequest(data.accessories);
+  if (!resAccessories.valid)
+    return {
+      ...resAccessories,
+      place: "makeRequest for 'accessories'",
+    };
+
+  const parsedClothes = parseResponse(resClothes.data, imageIdsToNames);
+  if (!parsedClothes.valid)
+    return {
+      ...parsedClothes,
+      place: "parseResponse for 'clothes'",
+    };
+  const parsedAccessories = parseResponse(resAccessories.data, imageIdsToNames);
+  if (!parsedAccessories.valid)
+    return {
+      ...parsedAccessories,
+      place: "parseResponse for 'accessories'",
+    };
 
   return {
     valid: true,
