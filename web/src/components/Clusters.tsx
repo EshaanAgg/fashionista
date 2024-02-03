@@ -8,6 +8,7 @@ import imageData from '../data/imageItems.json';
 type TableRowProps = {
   cluster: DataItemWithImage[];
 };
+
 const TableRow = ({ cluster }: TableRowProps) => {
   const clusterName = cluster[0].name;
   const clusterColours: Record<string, number> = {},

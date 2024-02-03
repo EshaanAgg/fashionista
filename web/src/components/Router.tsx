@@ -18,6 +18,11 @@ export const Router = () => {
       name: 'Clusters View',
       color: 'red',
     },
+    {
+      path: '/network',
+      name: 'Network View',
+      color: 'orange',
+    },
   ];
 
   return (

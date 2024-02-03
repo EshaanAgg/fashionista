@@ -7,6 +7,7 @@ import { ImageData } from './components/ImageData';
 import { Cluster } from './components/Cluster';
 import { Clusters } from './components/Clusters';
 import { Router } from './components/Router';
+import { NetworkClusters } from './components/NetworkClusters';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { GraphOptionsProvider } from './context/GraphOptions';
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Router />,
+  },
+  {
+    path: '/network',
+    element: <NetworkClusters />,
   },
 ]);
 
